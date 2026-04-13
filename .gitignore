@@ -1,6 +1,6 @@
-node_module/
+node_modules/
 .env
 dist/
-
-docker-compose.override.yml
-*.log 
+docker-compose.yml
+Dockerfile
+*.log
