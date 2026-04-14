@@ -47,7 +47,7 @@ export class UserController{
 
     userEdit = async (req: Request, res: Response) => {
         try{
-            const id = req.params.id
+            const {id} = req.params
             const body = req.body
 
             if(typeof id != 'string') return console.log("el id no es un string")
@@ -58,6 +58,22 @@ export class UserController{
         }catch(error){
             console.error(`${error}`)
             res.status(500).json({message: 'error en la actualizacion en ñla base de datos'})
+        }
+    }
+
+    userDelete = async (req: Request, res: Response) => {
+        try{
+            const {id} = req.params
+            if(typeof id != 'string') return console.log("el id no es un string")
+
+            const user = this.userService.deleteUser(id)
+            if(!user){
+                return res.status(404).json({message: 'no existe'})
+            } 
+            res.status(200).json({message: 'usuario eliminado exitosamente'})
+        }catch(error){
+            console.error(`${error}`)
+            return res.status(500).json({message: 'error en el servidor'})
         }
     }
 }

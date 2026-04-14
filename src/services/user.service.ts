@@ -1,3 +1,4 @@
+import { ResultSetHeader } from "mysql2";
 import { DATABASE } from "../config/db";
 import { User } from "../interfaces/users.interface";
 
@@ -59,10 +60,18 @@ export class UserService{
                 profesion || null,
                 habilidadesJSON,
                 puntos || null,
-                id
+                idNumber
             ])
 
             return resultado.affectedRows > 0
         }
 
+        async deleteUser(id: string) {
+            const pool = this.db.getPool();
+            const idNumber = id
+
+            const [respuesta] = await pool.query<ResultSetHeader>("DELETE FROM users WHERE id = ?", [idNumber])
+
+            return respuesta.affectedRows > 0
+        }
 }

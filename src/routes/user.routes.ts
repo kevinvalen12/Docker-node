@@ -24,22 +24,6 @@ export class UserRouter{
 
         this.router.put('/:id', this.userController.userEdit)
 
-        this.router.delete('/:id', async (req: Request, res: Response) => {
-            const {id} = req.params
-
-            try{
-                const pool = this.db.getPool();
-                const [resultado] = await pool.query<ResultSetHeader>("DELETE FROM users WHERE id = ?", [id])
-
-                if(resultado.affectedRows === 0){
-                    return res.status(400).json({message: 'usuario no encontrado'})
-                }
-
-                return res.status(200).json({message: 'usuario eliminado exitosamnete'})
-            }catch(error){
-                console.error(`${error}`)
-                return res.status(500).json({message: 'error en el servidor'})
-            }
-        })
+        this.router.delete('/:id', this.userController.userDelete)
     }
 }
