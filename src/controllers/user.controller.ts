@@ -45,5 +45,19 @@ export class UserController{
 
     }
 
-    
+    userEdit = async (req: Request, res: Response) => {
+        try{
+            const id = req.params.id
+            const body = req.body
+
+            if(typeof id != 'string') return console.log("el id no es un string")
+
+            const data = this.userService.editUser(id, body)
+            if(!data) return res.status(400).json({})
+            res.json({message: 'usuario actualizado', id: req.params.id})
+        }catch(error){
+            console.error(`${error}`)
+            res.status(500).json({message: 'error en la actualizacion en ñla base de datos'})
+        }
+    }
 }

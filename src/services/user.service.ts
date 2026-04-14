@@ -35,5 +35,34 @@ export class UserService{
             return resulatdo.insertId
         }
 
-        
+        async editUser(id: string, body: User) {
+            const pool = this.db.getPool();
+            const idNumber = Number(id)
+            const {nombre, profesion, email, habilidades, puntos} = body
+            
+            const habilidadesJSON = JSON.stringify(habilidades || []) 
+            console.log(habilidadesJSON)
+
+            const query = `UPDATE 
+                            users 
+                            SET 
+                                nombre = COALESCE(?, nombre),
+                                email = COALESCE(?, email), 
+                                profesion = COALESCE(?, profesion), 
+                                habilidades = COALESCE(?, habilidades), 
+                                puntos = COALESCE(?, puntos)
+                            WHERE id = ?`;
+            
+            const [resultado]: any = await pool.query<User[]>(query, [
+                nombre || null,
+                email || null,
+                profesion || null,
+                habilidadesJSON,
+                puntos || null,
+                id
+            ])
+
+            return resultado.affectedRows > 0
+        }
+
 }
