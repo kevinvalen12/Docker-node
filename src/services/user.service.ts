@@ -9,4 +9,16 @@ export class UserService{
             const [rows] =  await pool.query<User[]>("SELECT * FROM users")
             return rows
         }
+
+        async getId(id: string): Promise<User | undefined> {
+            const idNumber = Number(id)
+
+            if(isNaN(idNumber)){
+                return undefined
+            }
+
+            const pool = this.db.getPool();
+            const [rows] = await pool.query<User[]>("SELECT * FROM `users` WHERE id = ?", [idNumber])
+            return rows.length > 0 ? rows[0] : undefined
+        }
 }

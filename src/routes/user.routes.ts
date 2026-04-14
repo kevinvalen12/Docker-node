@@ -19,20 +19,7 @@ export class UserRouter{
     private configuracion(): void{
         this.router.get('/', this.userController.getUser);
 
-        this.router.get('/:id', async (req: Request, res: Response) => {
-            try{
-                const {id} = req.params;
-                const pool = this.db.getPool();
-                const [rows] = await pool.query<User[]>("SELECT * FROM `users` WHERE id = ?", [id])
-
-                if(rows.length === 0) return res.status(404).json({message: 'no existe'})
-                res.json(rows[0])
-            }catch(error){
-                console.error(`${error}`)
-                res.status(500).json({message: 'Error en el servidor'})
-            }
-
-        })
+        this.router.get('/:id', this.userController.getUsersId);
 
         this.router.post('/', async (req: Request, res: Response) => {
             const {nombre, profesion, email, habilidades, puntos} = req.body
