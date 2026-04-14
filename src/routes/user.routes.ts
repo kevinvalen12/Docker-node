@@ -1,13 +1,12 @@
 import { UserController } from './../controllers/user.controller';
 import {Request, Response, Router} from 'express';
 import {ResultSetHeader} from 'mysql2'
-import { DBASE } from '../config/db';
-import { User } from '../interfaces/users.interface';
+import { DATABASE } from '../config/db';
 
 export class UserRouter{
     public router: Router;
     private userController: UserController; 
-    private db = DBASE.getInstance();
+    private db = DATABASE.getInstance();
 
     constructor(){
         this.router = Router();
@@ -21,27 +20,7 @@ export class UserRouter{
 
         this.router.get('/:id', this.userController.getUsersId);
 
-        this.router.post('/', async (req: Request, res: Response) => {
-            const {nombre, profesion, email, habilidades, puntos} = req.body
-
-            try{
-                const pool = this.db.getPool();
-
-                const habilidadesJSON = JSON.stringify(habilidades || [])
-                const query = "INSERT INTO users(nombre, email, profesion, habilidades, puntos) VALUES (?, ?, ?, ?, ?)"
-                const values = [nombre, profesion, email, habilidadesJSON, puntos || 0]
-
-                const [resulatdo]: any = await pool.execute(query, values)
-                res.status(201).json({
-                    id: resulatdo.insertId,
-                    nombre,
-                    profesion
-                })
-            }catch(error){
-                console.error(`${error}`)
-                res.status(500).json({message: 'Error al guardar el usuario'})
-            }
-        })
+        this.router.post('/', this.userController.usercreate);
 
         this.router.put('/:id', async (req: Request, res: Response) => {
             const {id} = req.params;

@@ -33,4 +33,17 @@ export class UserController{
             res.status(500).json({message: 'error en el servidor'})
         }
     }
+
+    usercreate = async (req: Request, res: Response) => {
+        try{
+            const id = await this.userService.createUser(req.body)
+            res.status(201).json({id, ...req.body})
+        }catch(error){
+            console.error(`${error}`)
+            res.status(500).json({message: 'Error al guardar el usuario'})
+        }
+
+    }
+
+    
 }

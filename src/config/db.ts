@@ -8,8 +8,8 @@ dotenv.config();
  * se encarga de crear y gestionar una sola conexion d la base de datos 
  */
 
-export class DBASE{
-    private static instance: DBASE;
+export class DATABASE{
+    private static instance: DATABASE;
     private pool: Pool;
 
     private constructor() {
@@ -37,12 +37,12 @@ export class DBASE{
      * @returns retorna la unica instacia de DBASE(singleton)
      */
     // Singleton
-    static getInstance(): DBASE {
-       if(!DBASE.instance) {
+    static getInstance(): DATABASE {
+       if(!DATABASE.instance) {
         // LO CREA SOLO UNA VEZ
-        DBASE.instance = new DBASE();
+        DATABASE.instance = new DATABASE();
        }
-       return DBASE.instance;
+       return DATABASE.instance;
     }
 
     /**
