@@ -1,12 +1,11 @@
 import { UserController } from './../controllers/user.controller';
-import {Request, Response, Router} from 'express';
-import {ResultSetHeader} from 'mysql2'
-import { DATABASE } from '../config/db';
+import { Router } from 'express';
+
+
 
 export class UserRouter{
     public router: Router;
-    private userController: UserController; 
-    private db = DATABASE.getInstance();
+    private userController: UserController;
 
     constructor(){
         this.router = Router();

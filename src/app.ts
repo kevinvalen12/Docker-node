@@ -2,13 +2,15 @@ import express, {Request, Response} from 'express';
 import dotenv from 'dotenv'
 import morgan from 'morgan';
 
-import {UserRouter} from './routes/user.routes'
+import { UserRouter } from './routes/user.routes'
+import { MovieRouter } from './routes/movie.routes'
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT
 const userRouter = new UserRouter();
+const movieRouter = new MovieRouter();
 
 // Activa morgan
 app.use(morgan('dev'));
@@ -20,6 +22,7 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 app.use('/api/users', userRouter.router)
+app.use('/api/movies', movieRouter.router)
 
 app.listen(PORT, () => {
     console.log(`conexion exitasa al puerto ${PORT}`)
