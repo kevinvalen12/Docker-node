@@ -5,6 +5,7 @@ export interface User extends RowDataPacket{
     nombre: string,
     profesion: string,
     email: string,
+    password: string,
     habilidades: string[],
     puntos: number
     created_at: Date

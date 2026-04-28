@@ -1,4 +1,6 @@
+import { authMiddleware } from '../middleware/auth.middleware';
 import { UserController } from './../controllers/user.controller';
+
 import { Router } from 'express';
 
 
@@ -15,14 +17,14 @@ export class UserRouter{
     }
 
     private configuracion(): void{
-        this.router.get('/', this.userController.getUser);
+        this.router.get('/', authMiddleware, this.userController.getUser);
 
-        this.router.get('/:id', this.userController.getUsersId);
+        this.router.get('/:id', authMiddleware, this.userController.getUsersId);
 
-        this.router.post('/', this.userController.usercreate);
+        this.router.post('/', authMiddleware, this.userController.usercreate);
 
-        this.router.put('/:id', this.userController.userEdit)
+        this.router.put('/:id', authMiddleware, this.userController.userEdit)
 
-        this.router.delete('/:id', this.userController.userDelete)
+        this.router.delete('/:id', authMiddleware, this.userController.userDelete)
     }
 }

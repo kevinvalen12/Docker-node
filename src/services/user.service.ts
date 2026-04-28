@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import { ResultSetHeader } from "mysql2";
 import { DATABASE } from "../config/db";
 import { User } from "../interfaces/users.interface";
@@ -25,12 +26,13 @@ export class UserService{
 
         
         async createUser(userData: User): Promise<User> {
-            const {nombre, profesion, email, habilidades, puntos} = userData
+            const {nombre, profesion, email, habilidades, puntos, password} = userData
             const habilidadesJSON = JSON.stringify(habilidades || [])
+            const passwordEncriptado = await bcrypt.hash(password, 10)
 
             const pool = this.db.getPool();
             const query = "INSERT INTO users(nombre, email, profesion, habilidades, puntos) VALUES (?, ?, ?, ?, ?)"
-            const value = [nombre, profesion, email, habilidadesJSON, puntos || 0]
+            const value = [nombre, profesion, email, habilidadesJSON, puntos || 0, passwordEncriptado]
 
             const [resulatdo]: any = await pool.execute(query, value)
             return resulatdo.insertId
@@ -38,9 +40,9 @@ export class UserService{
 
         async editUser(id: string, body: User) {
             const pool = this.db.getPool();
-            const idNumber = Number(id)
-            const {nombre, profesion, email, habilidades, puntos} = body
+            const {nombre, profesion, email, habilidades, puntos, password} = body
             
+            const passwordEncriptada = await bcrypt.hash(password, 10)
             const habilidadesJSON = JSON.stringify(habilidades || []) 
             console.log(habilidadesJSON)
 
@@ -52,6 +54,7 @@ export class UserService{
                                 profesion = COALESCE(?, profesion), 
                                 habilidades = COALESCE(?, habilidades), 
                                 puntos = COALESCE(?, puntos)
+                                password = COALESCE(?, password)
                             WHERE id = ?`;
             
             const [resultado]: any = await pool.query<User[]>(query, [
@@ -60,7 +63,8 @@ export class UserService{
                 profesion || null,
                 habilidadesJSON,
                 puntos || null,
-                idNumber
+                passwordEncriptada,
+                id
             ])
 
             return resultado.affectedRows > 0
