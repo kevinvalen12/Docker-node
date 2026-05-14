@@ -1,4 +1,26 @@
+# Dependencias
 node_modules/
+.pnpm-store/
+
+# Archivos de entorno (NO SUBIR A GIT)
 .env
+.env.local
+.env.*.local
+
+# Build
 dist/
-*.log
+build/
+
+# pnpm
+pnpm-lock.yaml  # Opcional: algunos lo commitean, otros no
+
+# Docker
+.docker/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

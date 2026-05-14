@@ -5,8 +5,15 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - .:/app
+      - ./src:/app/src
       - /app/node_modules
-    command: npm run dev
+    command: pnpm run dev
+    env_file:
+      - .env
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - PNPM_HOME=/app/.pnpm-store
+      - CI=true
+
+volumes:
+  pnpm-store:

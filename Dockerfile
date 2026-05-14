@@ -1,19 +1,27 @@
 FROM node:22-alpine
 
-# Instalamos dependencias necesarias para compilar algunos módulos de Node si fuera necesario
+# Instalamos dependencias necesarias para compilar algunos módulos de Node
 RUN apk add --no-cache libc6-compat
+
+# Habilitamos corepack para usar pnpm directamente
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-#instalamos dependencias
-COPY package*.json ./
+# Copiamos archivos de dependencias
+COPY package.json .npmrc ./
 
-RUN npm install
+#Instalar dependencias
+COPY pnpm-lock.yaml* ./
 
-## copia el resto del codigo 
+# Instalamos dependencias (sin scripts) y luego reconstruimos esbuild explícitamente
+RUN pnpm install --frozen-lockfile --ignore-scripts && pnpm rebuild esbuild
+
+# Copia el resto del código 
 COPY . .
 
-#puerto
+# Puerto
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+# Comando para desarrollo con hot-reload
+CMD ["pnpm", "run", "dev"]
